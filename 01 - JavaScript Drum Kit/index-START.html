@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
 
@@ -58,10 +60,50 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    let prevkeyElement, prevaudioElement;
 
-</script>
+    function playSound(e) {
+
+      if (prevkeyElement !== undefined) {
+        prevkeyElement.classList.remove("playing");
+        prevaudioElement.pause();
+      }
+      //key press or click event
+      let keyCode = e.keyCode || this.getAttribute('data-key');
+
+
+      const audio = document.querySelector(`audio[data-key="${keyCode}"]`)
+      const key = document.querySelector(`div[data-key="${keyCode}"]`)
+
+      if (!audio) return;
+
+
+      prevkeyElement = key;
+      prevaudioElement = audio;
+
+      key.classList.add('playing')
+      audio.currentTime = 0
+      audio.play()
+
+    };
+
+    function removeTransition(e) {
+      if (e.propertyName != 'transform') return;
+      this.classList.remove('playing');
+      console.log(this)
+    }
+
+    const keys = document.querySelectorAll(".key");
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+
+    keys.forEach(key => key.addEventListener('click', playSound));
+    window.addEventListener('keydown', playSound);
+
+
+  </script>
 
 
 </body>
+
 </html>
